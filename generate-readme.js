@@ -21,6 +21,6 @@ Descripción de tu proyecto.
 
 ## Resultado final
 
-![Imagen del resultado final](assets/app.jpg)`;
+![Imagen del resultado final](assets/app.png))`;
 
 fs.writeFileSync('README.md', readmeContent);
