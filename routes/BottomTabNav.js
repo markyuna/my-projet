@@ -26,11 +26,17 @@ const BottomTabNav = () => {
         tabBarOptions={{
             activeTintColor: 'rebeccapurple',
             inactiveTintColor: 'gray',
-            activeBackgroundColor: '#ccc',
         }}
    >
-        <Tab.Screen name="Home" component={HomeStackScreen} options={{ title: 'Accueil' }} />
-        <Tab.Screen name="Settings" component={Settings} options={{ title: 'Réglages' }} />
+        <Tab.Screen 
+            name="Home" 
+            component={HomeStackScreen} 
+            options={{ 
+                title: 'Accueil' 
+            }} 
+        />
+        <Tab.Screen 
+        name="Settings" component={Settings} options={{ title: 'Réglages' }} />
 
     </Tab.Navigator>
   )
