@@ -1,27 +1,23 @@
 import React from 'react';
+import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
-import { MaterialIcons } from '@expo/vector-icons';
+import DrawerNav from './routes/DrawerNav';
+import Login from './screens/Login';
 
-import Drawer from './routes/DrawerNav';
-import CustomDrawerContent from './components/CustomDrawerContent';
-import BottomTabNav from './routes/BottomTabNav';
+const Stack = createStackNavigator();
 
 export default function App() {
 
   return (
     <NavigationContainer>
-      <Drawer.Navigator
-        drawerContent={props => <CustomDrawerContent {...props} />}
+      <Stack.Navigator
+        initialRouteName="Login"
+        screenOptions={{ headerShown: false }}
       >
-        <Drawer.Screen 
-          name="Home" 
-          component={BottomTabNav} 
-          options={{ 
-            title: 'Accueil',
-            drawerIcon: () => <MaterialIcons name="home" size={24} color="black" />
-            }} />
-        {/* <Drawer.Screen name="Profil" component={PortfolioStackScreen} options={{ title: 'Ma Page'}}/> */}
-      </Drawer.Navigator>
+        <Stack.Screen name="Login" component={Login} options={{ title: 'Conexion' }}/>
+        <Stack.Screen name="Home" component={DrawerNav}/>
+
+      </Stack.Navigator>      
     </NavigationContainer>
   );
 }

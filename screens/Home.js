@@ -1,36 +1,43 @@
 
 import React from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Home = ({navigation}) => {
 
-    const handlePress = () => {
-        navigation.navigate('Profil')
+    const remove = async () => {
+      try {
+        await AsyncStorage.clear();
+        navigation.navigate('Login');
+      } catch (error) {
+        alert(error.message)
+      }
     }
     
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Home</Text>
+      
       <Pressable
         style={({pressed}) => ({ backgroundColor: pressed ? 'lightseagreen' : 'rebeccapurple', padding: 10, borderRadius: 5 })}
-        onPress={handlePress}
+        onPress={remove}
       >
-        <Text>Go to Portfolio</Text>
+        <Text style={styles.btn}>Effacer</Text>
       </Pressable>
     </View>
   )
 }
 
-export default Home
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'lightblue',
-    },
-    text: {
-        fontSize: 30,
-    },
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'lightblue',
+  },
+  text: {
+    fontSize: 30,
+  },
 })
+
+    export default Home

@@ -20,3 +20,4 @@ Descripción de tu proyecto.
 ## Resultado final
 
 ![Imagen del resultado final](assets/app.jpg)
+![Imagen del resultado final](assets/twitter.jpg)

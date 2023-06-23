@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useLayoutEffect} from 'react'
 import { DrawerContentScrollView , DrawerItem} from '@react-navigation/drawer'
 import { MaterialIcons } from '@expo/vector-icons'; 
 import { StyleSheet, View } from 'react-native'
@@ -13,9 +13,31 @@ import {
     Switch
 } from 'react-native-paper'
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const CustomDrawerContent = (props) => {
 
     const [isDark, setIsDark] = useState(false);
+    const [name, setName] = useState(false);
+    const [firstName, setFirstName] = useState();
+
+    const load = async() => {
+      
+        try {
+            let jsonValue = await AsyncStorage.getItem('LoginDetails')
+            if (jsonValue !== null) {
+                let user = JSON.parse(jsonValue);
+                setName(user.lastName);
+                setFirstName(user.firstName);
+            }
+        } catch (error) {
+            alert(error.message)
+        }    
+    }
+
+    useLayoutEffect(() => {
+        load()
+    }, [])
 
     const toggleDarkTheme = () => {
         setIsDark(!isDark);
@@ -32,8 +54,8 @@ const CustomDrawerContent = (props) => {
                         size={90}
                     />
                     <View style={styles.name}>
-                        <Title style={styles.title}>MarkPaper</Title>
-                        <Caption style={styles.caption}>@markpapermache</Caption>
+                        <Title style={styles.title}>{firstName} {name}</Title>
+                        <Caption style={styles.caption}>@ {name}</Caption>
                     </View>
                 </View>
 
