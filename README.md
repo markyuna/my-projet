@@ -1,8 +1,8 @@
 # Demo Drawer Navigation
 
-Descripción de tu proyecto.
+Description of project.
 
-## Versiones utilizadas
+## Versions used
 
 - React: 18.2.0
 - react-native": 0.71.8
@@ -17,7 +17,7 @@ Descripción de tu proyecto.
 - react-native-vector-icons: 8.1.0
 
 
-## Resultado final
+## Final result
 
 ![Imagen del resultado final](assets/app.jpg)
 ![Imagen del resultado final](assets/twitter.jpg)
