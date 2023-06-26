@@ -1,125 +1,117 @@
-import React, { useState} from 'react';
-import { 
-  ActivityIndicator, 
-  Button, 
+import React, { useState } from 'react';
+import {
+  ActivityIndicator,
+  Button,
   TouchableOpacity,
-  TextInput, 
-  StyleSheet, 
-  Text, 
-  View, 
-  Image
+  TextInput,
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  ScrollView,
 } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { setUserInfos } from '../redux/actions/actionUserInfos';
 import * as ImagePicker from 'expo-image-picker';
 
-const ProfilInfos = ({navigation}) => {
+const ProfilInfos = ({ navigation }) => {
+  const dispatch = useDispatch();
 
-    const dispatch = useDispatch();
+  const [lastName, setLastName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [profilImage, setProfilImage] = useState(
+    'https://res.cloudinary.com/dxrttyi2g/image/upload/v1687744563/square-format_-transparent-background-designify_1_djosja.png'
+  );
+  const [isLoading, setIsLoading] = useState(false);
 
-    const [lastName, setLastName] = useState('');
-    const [firstName, setFirstName] = useState('');
-    const [profilImage, setProfilImage] = useState('https://res.cloudinary.com/dxrttyi2g/image/upload/v1687744563/square-format_-transparent-background-designify_1_djosja.png');
-    const [isLoading, setIsLoading] = useState(false);
+  const handleSubmit = () => {
+    if (lastName.length > 0 && firstName.length > 0 && profilImage.length > 0) {
+      setIsLoading(true);
 
-    const handleSubmit = async () => {
-      if (lastName.length > 0 && firstName.length > 0 && profilImage.length > 0) {
-        setIsLoading(true);
+      dispatch(setUserInfos(firstName, lastName, profilImage));
 
-        dispatch(setUserInfos(firstName, lastName, profilImage));
-
-        // vers home 
-        navigation.replace('GeoLocation');
-
-      } else {
-        alert('Veuillez remplir tous les champs');
-      }
+      // Ir a la pantalla principal
+      navigation.replace('GeoLocation');
+    } else {
+      alert('Veuillez remplir tous les champs');
     }
+  };
 
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 0.5, // entre 0 y 1
+    });
 
-    const pickImage = async () => {
-      let result = await ImagePicker.launchImageLibraryAsync({
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 0.5, // entre 0 1
-      });
+    console.log(result);
 
-      console.log(result);
-
-      if (!result.canceled) {
-        setProfilImage(result)
-      } else {
-        alert('You did not select any image.');
-      }
+    if (!result.cancelled) {
+      setProfilImage(result.uri);
+    } else {
+      alert('No seleccionaste ninguna imagen.');
     }
+  };
 
   return (
-      <View style={styles.container}>
+    <View style={styles.container}>
+      <ScrollView>
         <View style={styles.inputContainer}>
-
           <Text style={styles.text}>Indiquez vos informations</Text>
 
           <TextInput
             placeholder="Votre Nom"
             style={styles.input}
-            onChangeText={text => setLastName(text)}
+            onChangeText={(text) => setLastName(text)}
           />
           <TextInput
             placeholder="Votre Prenom"
             style={styles.input}
-            onChangeText={text => setFirstName(text)}
+            onChangeText={(text) => setFirstName(text)}
           />
 
           <View style={styles.photoContainer}>
             <View style={styles.wrapper}>
-              <Image
-                style={styles.photo}
-                source={{uri: profilImage}}
-              />
+              <Image style={styles.photo} source={{ uri: profilImage }} />
             </View>
-            <Button 
-              title="Selectionner une photo" 
-              color="yellow" 
-              onPress={ pickImage }
+            <Button
+              title="Selectionner une photo"
+              color="yellow"
+              onPress={pickImage}
             />
           </View>
 
-          {
-            isLoading ? 
-            <ActivityIndicator size="large" color="white" /> :
-            <TouchableOpacity
-              style={styles.touchable}
-              onPress={handleSubmit}
-            >
-              <View style={styles.btnContainer}>     
+          {isLoading ? (
+            <ActivityIndicator size="large" color="white" />
+          ) : (
+            <TouchableOpacity style={styles.touchable} onPress={handleSubmit}>
+              <View style={styles.btnContainer}>
                 <Text style={styles.btnText}>Valider</Text>
-              </View> 
+              </View>
             </TouchableOpacity>
-          }
-
+          )}
         </View>
-      </View>
-  )
-}
-
+      </ScrollView>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#1A91DA',
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  logo: {
-    marginBottom: 50,
   },
   inputContainer: {
     width: '100%',
     paddingHorizontal: 50,
+    paddingVertical: 50,
+  },
+  logo: {
+    marginBottom: 50,
   },
   input: {
     backgroundColor: 'white',
-    paddingHorizontal: 20,
+    paddingHorizontal: 25,
     paddingVertical: 15,
     borderRadius: 50,
     fontSize: 20,
@@ -158,7 +150,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-})
+});
 
-
-export default ProfilInfos
+export default ProfilInfos;

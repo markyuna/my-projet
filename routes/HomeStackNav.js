@@ -8,6 +8,7 @@ import Listes from '../screens/Lists';
 import Sujets from '../screens/Sujets';
 import Signets from '../screens/Signets';
 import Moments from '../screens/Moments';
+import InteractiveMap from '../screens/InteractiveMap';
 
 const HomeStack = createStackNavigator();
 
@@ -31,6 +32,7 @@ const HomeStackNav = ({ navigation }) => {
       <HomeStack.Screen name="Sujets" component={Sujets} />
       <HomeStack.Screen name="Signets" component={Signets} />
       <HomeStack.Screen name="Moments" component={Moments} />
+      <HomeStack.Screen name="Map" component={InteractiveMap} />
     </HomeStack.Navigator>
   );
 };

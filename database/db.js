@@ -28,7 +28,7 @@ export const addUserGeo = (latitude, longitude) => {
     const insertPromise = new Promise((resolve, reject) => {
         db.transaction(tx => {
             tx.executeSql(
-                'INSERT INTO userGeo (?, ?);',
+                'INSERT INTO userGeo (latitude, longitude) VALUES (?, ?)',
                 [latitude, longitude],
                 (_, result) => {
                     resolve(result);
@@ -42,4 +42,24 @@ export const addUserGeo = (latitude, longitude) => {
 
     return insertPromise;
 
+}
+
+// recuperer la data
+export const fetchInSQLite = () => {
+    const initPromise = new Promise((resolve, reject) => {
+        db.transaction(tx => {
+         tx.executeSql(
+             'SELECT * FROM userGeo',
+             [],
+             (_, result) => {
+                 resolve(result);
+             },
+             (_, error) => {
+                 reject(error);
+             }
+         )
+        }) 
+     });
+ 
+     return initPromise;
 }
