@@ -1,29 +1,61 @@
-import React, { useState, useEffect } from 'react';
-import { ActivityIndicator, Alert, Pressable, TouchableOpacity, TextInput, StyleSheet, Text, View } from 'react-native';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
+import { 
+  ActivityIndicator, 
+  Alert, 
+  TouchableOpacity, 
+  Pressable, 
+  TextInput, 
+  StyleSheet, 
+  Text, 
+  View 
+} from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { LinearGradient } from 'expo-linear-gradient';
+import WaitScreen from './WaitScreen';
 import { useDispatch } from 'react-redux';
 import { actionSignup, actionLogin } from '../redux/actions/actionAuth';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const Login = ({ navigation }) => {
-
   const dispatch = useDispatch();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSignup, setIsSignup] = useState(true);
-  const [error, setError] = useState();
+  const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isAuth, setIsAuth] = useState(false);
 
+  const load = async () => {
+    const userDetailsStr = await AsyncStorage.getItem('userDetails');
+    if (userDetailsStr !== null) {
+      const userDetailsObj = JSON.parse(userDetailsStr);
+      const { token, userId, dateTokenExpire } = userDetailsObj;
+      const expireDate = new Date(dateTokenExpire);
+
+      if (expireDate <= new Date() || !token || !userId) {
+        setIsAuth(true);
+        return;
+      }
+
+      navigation.navigate('Home');
+      setIsAuth(true);
+    } else {
+      setIsAuth(true);
+    }
+  };
+
+  useLayoutEffect(() => {
+    load();
+  }, []);
 
   useEffect(() => {
-    if (error !== null) {
+    if (error != null) {
       Alert.alert(
-        'ERREUR',
-        error,
-        [{ text: 'OK'}],
-        );
+        'ERREUR', 
+        error, 
+        [{ text: 'OK' }]
+      );
     }
   }, [error]);
 
@@ -34,7 +66,7 @@ const Login = ({ navigation }) => {
         setIsLoading(true);
         try {
           await dispatch(actionSignup(email, password));
-          navigation.navigate('Home');
+          navigation.navigate('ProfileInfos');
         } catch (error) {
           setError(error.message);
           setIsLoading(false);
@@ -52,67 +84,68 @@ const Login = ({ navigation }) => {
         }
       }
     } else {
-      alert('Veuillez remplir tous les champs');
+      Alert("Vueillez remplir tous les champs");
     }
-  };
+  }
 
-  // const handleToggleSignup = () => {
-  //   setIsSignup(!isSignup);
-  // };
+  if (isAuth) {
+    return (
+      <LinearGradient
+        colors={['#1A91DA', '#Fff']}
+        style={styles.container}
+      >
+        <View style={styles.logo}>
+          {
+            isLoading ?
+              <ActivityIndicator 
+                  size="large" 
+                  color="white" 
+              /> :
+              <AntDesign name="twitter" size={80} color={"white"}/>
+          }
+        </View>
+        <View style={styles.inputContainer}>
 
-  return (
-    <LinearGradient 
-      colors={['#1A91DA', '#fff']} 
-      style={styles.container}
-    >
-      <View style={styles.logo}>
-      {
-        isLoading ? 
-        <ActivityIndicator 
-          size="large" 
-          color="white" 
-
-        /> : null
-      }
-        <AntDesign name="twitter" size={80} color="white" />
-      </View>
-      <View style={styles.inputContainer}>
-
-        <Text style={styles.text}>{isSignup ? 'Inscription' : 'Connexion'}</Text>
-
-        <TextInput
-          placeholder="Votre Email"
-          keyboardType="email-address"
-          style={styles.input}
-          onChangeText={text => setEmail(text)}
-        />
-        <TextInput
-          placeholder="Votre mot de passe"
-          secureTextEntry
-          style={styles.input}
-          onChangeText={text => setPassword(text)}
-        />
-        <TouchableOpacity 
-          style={styles.touchable} 
-          onPress={handleSubmit}
-        >
-          <View style={styles.btnContainer}>
-            <Text style={styles.btnText}>{isSignup ? 'Valider' : "Valider"}</Text>
-          </View>
-        </TouchableOpacity>
-
-        <Pressable 
-            onPress={() => setIsSignup( prevState => !prevState)}
-        >
-          <Text style={{textAlign: 'center', marginTop: 9}}>
-            {isSignup ? 'Vers Conexion' : 'Vers Inscription'}
-          </Text>
+          <Text style={styles.text}>{isSignup ? "Inscription" : "Connexion" }</Text>
           
-        </Pressable>
-      </View>
-    </LinearGradient>
-  );
-};
+          <TextInput
+            placeholder="Votre Email"
+            keyboardType="email-address"
+            style={styles.input}
+            onChangeText={text => setEmail(text)}
+          />
+
+          <TextInput
+            placeholder="Votre mot de passe"
+            secureTextEntry
+            style={styles.input}
+            onChangeText={text => setPassword(text)}
+          />
+
+          <TouchableOpacity
+            style={styles.touchable}
+            onPress={handleSubmit}
+          >
+            <View style={styles.btnContainer}>     
+              <Text style={styles.btnText}>Valider</Text>
+            </View> 
+          </TouchableOpacity>
+
+          <Pressable
+            onPress={() => setIsSignup( prevState => !prevState )}
+          >
+            <Text style={{ textAlign: 'center', marginTop: 9}}>
+              {isSignup ? "Vers Connexion" : "Vers Inscription"}
+            </Text>
+          </Pressable>
+        </View>
+      </LinearGradient>
+    )
+  }
+
+  return (<WaitScreen />)
+}
+
 
 const styles = StyleSheet.create({
   container: {
@@ -134,9 +167,6 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     fontSize: 20,
     marginVertical: 10,
-  },
-  touchable: {
-    marginVertical: 9,
   },
   text: {
     color: 'white',

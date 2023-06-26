@@ -2,15 +2,19 @@
 import React from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useSelector } from 'react-redux';
 
 const Home = ({navigation}) => {
+
+  const authUser = useSelector(state => state.users);
+
 
     const remove = async () => {
       try {
         await AsyncStorage.clear();
         navigation.navigate('Login');
       } catch (error) {
-        alert(error.message)
+        alert(error)
       }
     }
     

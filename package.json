@@ -18,7 +18,6 @@
     "@reduxjs/toolkit": "^1.9.5",
     "expo": "^48.0.0",
     "expo-linear-gradient": "~12.1.2",
-    "install": "^0.13.0",
     "npm": "^9.7.1",
     "react": "18.2.0",
     "react-native": "0.71.8",
