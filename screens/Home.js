@@ -9,7 +9,7 @@ const Home = ({navigation}) => {
   const authUser = useSelector(state => state.users);
 
 
-    const remove = async () => {
+    const remove = async() => {
       try {
         await AsyncStorage.clear();
         navigation.navigate('Login');

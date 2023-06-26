@@ -7,7 +7,7 @@ const WaitScreen = () => {
       <Text style={styles.container}>Patienter ...</Text>
         <ActivityIndicator 
             size="large" 
-            color="red" />
+            color="white" />
     </View>
   )
 }
@@ -23,8 +23,8 @@ const styles = StyleSheet.create({
     },
     text: {
         color: 'white',
-        fontSize: 30,
+        fontSize: 25,
         textAlign: 'center',
-        marginBottom: 20,
+        marginBottom: 30,
     },
 })

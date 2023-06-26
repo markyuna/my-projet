@@ -1,7 +1,7 @@
-import React, {useState, useLayoutEffect} from 'react'
+import React, {useState, useEffect} from 'react'
 import { DrawerContentScrollView , DrawerItem} from '@react-navigation/drawer'
 import { MaterialIcons } from '@expo/vector-icons'; 
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, View, Alert, ActivityIndicator } from 'react-native'
 import {
     Text,
     Avatar, 
@@ -18,24 +18,47 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const CustomDrawerContent = (props) => {
 
     const [isDark, setIsDark] = useState(false);
-    const [name, setName] = useState(false);
-    const [firstName, setFirstName] = useState();
+
+    const [lastName, setLastName] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [profilImage, setProfilImage] = useState('https://res.cloudinary.com/dxrttyi2g/image/upload/v1687744563/square-format_-transparent-background-designify_1_djosja.png');
+    const [isAuth, setIsAuth] = useState(false);
 
     const load = async() => {
-      
         try {
-            let jsonValue = await AsyncStorage.getItem('LoginDetails')
+            let jsonValue = await AsyncStorage.getItem('userProfilInfos');
+
             if (jsonValue !== null) {
                 let user = JSON.parse(jsonValue);
-                setName(user.lastName);
-                setFirstName(user.firstName);
+                // const { firstName, lastName, profilImage } = userProfilInfos;
+                const userId = user.userId
+
+                fetchData(userId);
+
             }
+
+
         } catch (error) {
-            alert(error.message)
-        }    
+            Alert.alert(
+                'ERREUR',
+                'Nous avons un probleme',
+                [{ text: 'OK', onPress: () => props.navigation.navigate('Login') }]
+            )
+        }
     }
 
-    useLayoutEffect(() => {
+    const fetchData = async (userId) => {
+        const firebaseResp = await fetch(`https://react-native-a7b0f-default-rtdb.europe-west1.firebasedatabase.app/users/${userId}.json`);
+        const fetchedData = await firebaseResp.json();
+
+        setLastName(fetchedData.lastName);
+        setFirstName(fetchedData.firstName);
+        setProfilImage(fetchedData.profilImage);
+        setIsAuth(true);
+
+    }
+
+    useEffect(() => {
         load()
     }, [])
 
@@ -48,16 +71,25 @@ const CustomDrawerContent = (props) => {
       <DrawerContentScrollView {...props}>
         <View style={styles.drawerContentContainer}>
             <View style={styles.userInfoContainer}>
-                <View style={styles.userInfoDetails}>
-                    <Avatar.Image
-                        source={require('../assets/logo.png')} 
-                        size={90}
-                    />
-                    <View style={styles.name}>
-                        <Title style={styles.title}>{firstName} {name}</Title>
-                        <Caption style={styles.caption}>@ {name}</Caption>
-                    </View>
-                </View>
+                {
+                    isAuth ? 
+                        <View style={styles.userInfoDetails}>
+                            <Avatar.Image
+                                source={{uri: profilImage}} 
+                                size={90}
+                            />
+                            <View style={styles.name}>
+                                <Title style={styles.title}>{firstName} {lastName}</Title>
+                                <Caption style={styles.caption}>@ {lastName}</Caption>
+                            </View>
+                        </View> : 
+                        <ActivityIndicator
+                            size="large"
+                            color="#1A91DA"
+                        />
+
+                }
+                
 
                 <View style={styles.followers}>
                     <View style={styles.section}>

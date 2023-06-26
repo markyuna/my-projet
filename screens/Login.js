@@ -11,18 +11,19 @@ import {
 } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import WaitScreen from './WaitScreen';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useDispatch } from 'react-redux';
 import { actionSignup, actionLogin } from '../redux/actions/actionAuth';
-import { LinearGradient } from 'expo-linear-gradient';
+import WaitScreen from './WaitScreen';
 
 const Login = ({ navigation }) => {
+
   const dispatch = useDispatch();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSignup, setIsSignup] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [isAuth, setIsAuth] = useState(false);
 
@@ -66,7 +67,7 @@ const Login = ({ navigation }) => {
         setIsLoading(true);
         try {
           await dispatch(actionSignup(email, password));
-          navigation.navigate('ProfileInfos');
+          navigation.replace('ProfilInfos');
         } catch (error) {
           setError(error.message);
           setIsLoading(false);
@@ -149,6 +150,7 @@ const Login = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: '#1A91DA',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -170,7 +172,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: 'white',
-    fontSize: 30,
+    fontSize: 25,
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
@@ -181,7 +183,7 @@ const styles = StyleSheet.create({
     padding: 9,
   },
   btnText: {
-    fontSize: 20,
+    fontSize: 17,
     textAlign: 'center',
     textTransform: 'uppercase',
   },

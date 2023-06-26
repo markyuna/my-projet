@@ -20,7 +20,7 @@ export default function App() {
           screenOptions={{ headerShown: false }}
         >
           <Stack.Screen name="Login" component={Login} />
-          <Stack.Screen name="ProfileInfos" component={ProfileInfos}/>
+          <Stack.Screen name="ProfilInfos" component={ProfileInfos}/>
           <Stack.Screen name="Home" component={DrawerNav}/>
 
         </Stack.Navigator>      

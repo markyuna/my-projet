@@ -10,29 +10,49 @@ import {
   View 
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import saveToAsyncStorage from '../redux/actions/actionAuth';
 
 
-const ProfileInfos = () => {
+const ProfileInfos = ({navigation}) => {
 
     const [lastName, setLastName] = useState('');
     const [firstName, setFirstName] = useState('');
-    const [profileImage, setProfileImage] = useState('');
+    const [profilImage, setProfilImage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
     const handleSubmit = async () => {
-      if (lastName.length > 0 && firstName.length > 0 && profileImage.length > 0) {
+      if (lastName.length > 0 && firstName.length > 0 && profilImage.length > 0) {
         setIsLoading(true);
 
-        // Fire Base
+       
+
+      
+        const userData = await firebaseResp.json();
+        console.log(userData);    // objet name; ID
+
+        saveToAsyncStorage(userData.name, firstName, lastName, profilImage);
+
+        // vers home 
+        navigation.replace('Home');
 
       } else {
         alert('Veuillez remplir tous les champs');
       }
     }
 
+    const saveToAsyncStorage = async (userId, firstName, lastName, profilImage) => {
+      await AsyncStorage.setItem('userProfilInfos', JSON.stringify({
+        userId: userId,
+        firstName: firstName,
+        lastName: lastName,
+        profilImage: profilImage,
+      }))
+    }
+
   return (
       <View style={styles.container}>
         <View style={styles.inputContainer}>
+
           <Text style={styles.text}>Indiquez vos informations</Text>
 
           <TextInput
@@ -49,7 +69,7 @@ const ProfileInfos = () => {
           <TextInput
             placeholder="Photo de Profil"
             style={styles.input}
-            onChangeText={text => setProfileImage(text)}
+            onChangeText={text => setProfilImage(text)}
           />
 
           {
@@ -73,6 +93,7 @@ const ProfileInfos = () => {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: '#1A91DA',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',

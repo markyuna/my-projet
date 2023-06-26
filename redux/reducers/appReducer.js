@@ -7,7 +7,7 @@ const initialState = {
   isLoading: false
 };
 
-const userReducer = (state = initialState, action) => {
+const appReducer = (state = initialState, action) => {
   switch (action.type) {
     case AUTH_USER:
       return {
@@ -22,4 +22,4 @@ const userReducer = (state = initialState, action) => {
   }
 };
 
-export default userReducer;
+export default appReducer;
