@@ -10,6 +10,7 @@ import Signets from '../screens/Signets';
 import Moments from '../screens/Moments';
 import InteractiveMap from '../screens/InteractiveMap';
 
+
 const HomeStack = createStackNavigator();
 
 const HomeStackNav = ({ navigation }) => {

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import {
   ActivityIndicator,
   Button,
@@ -10,47 +11,45 @@ import {
   Image,
   ScrollView,
 } from 'react-native';
-import { useDispatch } from 'react-redux';
-import { setUserInfos } from '../redux/actions/actionUserInfos';
 import * as ImagePicker from 'expo-image-picker';
+
+import { setUserInfos } from '../redux/actions/actionUserInfos';
 
 const ProfilInfos = ({ navigation }) => {
   const dispatch = useDispatch();
 
   const [lastName, setLastName] = useState('');
   const [firstName, setFirstName] = useState('');
-  const [profilImage, setProfilImage] = useState(
-    'https://res.cloudinary.com/dxrttyi2g/image/upload/v1687744563/square-format_-transparent-background-designify_1_djosja.png'
-  );
+  const [profilImage, setProfilImage] = useState('https://res.cloudinary.com/dxrttyi2g/image/upload/v1687744563/square-format_-transparent-background-designify_1_djosja.png');
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = () => {
-    if (lastName.length > 0 && firstName.length > 0 && profilImage.length > 0) {
-      setIsLoading(true);
-
-      dispatch(setUserInfos(firstName, lastName, profilImage));
-
-      // Ir a la pantalla principal
-      navigation.replace('GeoLocation');
-    } else {
+    if (!lastName || !firstName || !profilImage) {
       alert('Veuillez remplir tous les champs');
+      return;
     }
+
+    setIsLoading(true);
+    dispatch(setUserInfos(firstName, lastName, profilImage));
+    navigation.replace('GeoLocation');
   };
 
   const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
+    const result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
       aspect: [4, 3],
-      quality: 0.5, // entre 0 y 1
+      quality: 0.5,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
     });
 
     console.log(result);
 
-    if (!result.cancelled) {
-      setProfilImage(result.uri);
+    if (!result.canceled) {
+      setProfilImage(result.assets[0].uri);
     } else {
-      alert('No seleccionaste ninguna imagen.');
+      alert('Vous devez selectionner une image');
     }
+    
   };
 
   return (
@@ -59,16 +58,18 @@ const ProfilInfos = ({ navigation }) => {
         <View style={styles.inputContainer}>
           <Text style={styles.text}>Indiquez vos informations</Text>
 
-          <TextInput
-            placeholder="Votre Nom"
-            style={styles.input}
-            onChangeText={(text) => setLastName(text)}
+          <TextInput 
+              placeholder='Votre Nom'
+              style={styles.input}
+              onChangeText={ text => setLastName(text) }
           />
-          <TextInput
-            placeholder="Votre Prenom"
-            style={styles.input}
-            onChangeText={(text) => setFirstName(text)}
+
+          <TextInput 
+              placeholder='Votre Prénom'
+              style={styles.input}
+              onChangeText={ text => setFirstName(text) }
           />
+
 
           <View style={styles.photoContainer}>
             <View style={styles.wrapper}>
@@ -98,16 +99,13 @@ const ProfilInfos = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#1A91DA',
     flex: 1,
+    backgroundColor: '#1A91DA',
   },
   inputContainer: {
-    width: '100%',
     paddingHorizontal: 50,
     paddingVertical: 50,
-  },
-  logo: {
-    marginBottom: 50,
+    width: '100%',
   },
   input: {
     backgroundColor: 'white',
@@ -124,16 +122,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: 'center',
   },
-  btnContainer: {
-    backgroundColor: 'white',
-    borderRadius: 50,
-    padding: 9,
-  },
-  btnText: {
-    fontSize: 20,
-    textAlign: 'center',
-    textTransform: 'uppercase',
-  },
   photoContainer: {
     alignItems: 'center',
   },
@@ -149,6 +137,16 @@ const styles = StyleSheet.create({
   photo: {
     width: '100%',
     height: '100%',
+  },
+  btnContainer: {
+    backgroundColor: 'white',
+    borderRadius: 50,
+    padding: 9,
+  },
+  btnText: {
+    fontSize: 20,
+    textAlign: 'center',
+    textTransform: 'uppercase',
   },
 });
 

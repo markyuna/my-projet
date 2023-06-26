@@ -41,7 +41,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'lightblue',
   },
   text: {
-    fontSize: 30,
+    fontSize: 40,
+  },
+  btn: {
+    padding: 12,
+    color: "white"
   },
 })
 
