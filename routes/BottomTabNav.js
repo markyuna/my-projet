@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Settings from '../screens/Settings';
 import { MaterialIcons } from '@expo/vector-icons';
+import HomeStackNav from './HomeStackNav';
 
 const Tab = createBottomTabNavigator();
 

@@ -4,9 +4,17 @@ import { NavigationContainer } from '@react-navigation/native';
 import DrawerNav from './routes/DrawerNav';
 import store from './redux/store';
 import { Provider } from 'react-redux';
+import { sqliteInit } from './database/db';
 import Login from './screens/Login';
-import ProfileInfos from './screens/ProfileInfos';
+import ProfilInfos from './screens/ProfilInfos';
+import GeoLocation from './screens/GeoLocation';
 
+// Initialiser le BDD SQLIte 
+sqliteInit().then(() => {
+  console.log('BDD initialisée');
+}).catch(err => {
+  console.log(err);
+})
 
 const Stack = createStackNavigator();
 
@@ -20,7 +28,8 @@ export default function App() {
           screenOptions={{ headerShown: false }}
         >
           <Stack.Screen name="Login" component={Login} />
-          <Stack.Screen name="ProfilInfos" component={ProfileInfos}/>
+          <Stack.Screen name="ProfilInfos" component={ProfilInfos}/>
+          <Stack.Screen name="GeoLocation" component={GeoLocation}/>
           <Stack.Screen name="Home" component={DrawerNav}/>
 
         </Stack.Navigator>      

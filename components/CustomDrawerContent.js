@@ -12,10 +12,13 @@ import {
     TouchableRipple,
     Switch
 } from 'react-native-paper'
-
+import { useDispatch } from 'react-redux';
+import { actionLogout } from '../redux/actions/actionAuth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const CustomDrawerContent = (props) => {
+
+    const dispatch = useDispatch();
 
     const [isDark, setIsDark] = useState(false);
 
@@ -30,14 +33,12 @@ const CustomDrawerContent = (props) => {
 
             if (jsonValue !== null) {
                 let user = JSON.parse(jsonValue);
-                // const { firstName, lastName, profilImage } = userProfilInfos;
+
                 const userId = user.userId
 
                 fetchData(userId);
 
             }
-
-
         } catch (error) {
             Alert.alert(
                 'ERREUR',
@@ -66,6 +67,17 @@ const CustomDrawerContent = (props) => {
         setIsDark(!isDark);
     }
 
+    const handleLogout = async () => {
+        dispatch(actionLogout())
+
+        try {
+            await AsyncStorage.clear();
+            props.navigation.navigate('Login');
+          } catch (error) {
+            alert(error)
+          }
+    }
+
   return (
     <View style={styles.container}>
       <DrawerContentScrollView {...props}>
@@ -73,24 +85,21 @@ const CustomDrawerContent = (props) => {
             <View style={styles.userInfoContainer}>
                 {
                     isAuth ? 
-                        <View style={styles.userInfoDetails}>
-                            <Avatar.Image
-                                source={{uri: profilImage}} 
-                                size={90}
-                            />
-                            <View style={styles.name}>
-                                <Title style={styles.title}>{firstName} {lastName}</Title>
-                                <Caption style={styles.caption}>@ {lastName}</Caption>
-                            </View>
-                        </View> : 
-                        <ActivityIndicator
-                            size="large"
-                            color="#1A91DA"
-                        />
-
+                    <View style={styles.userInfoDetails}>
+                    <Avatar.Image
+                        source={{uri: profilImage}} 
+                        size={90}
+                    />
+                    <View style={styles.name}>
+                        <Title style={styles.title}>{firstName} {lastName}</Title>
+                        <Caption style={styles.caption}>@ {lastName}</Caption>
+                    </View>
+                    </View> : 
+                    <ActivityIndicator
+                        size="large"
+                        color="#1A91DA"
+                    />
                 }
-                
-
                 <View style={styles.followers}>
                     <View style={styles.section}>
                         <Paragraph style={[styles.paragraph, styles.section]}>24</Paragraph>
@@ -133,14 +142,14 @@ const CustomDrawerContent = (props) => {
             </Drawer.Section>
 
             <Drawer.Section title='Réglages'>
-            <DrawerItem 
+                <DrawerItem 
                     label="Paramètres de confidentialité"
                     icon={({color, size}) => <MaterialIcons name="settings" size={size} color={color} />}
                     onPress={() => props.navigation.navigate('Settings')}
                 />
 
                 <TouchableRipple
-                    onPress={() => {toggleDarkTheme()}}
+                    onPress={() => toggleDarkTheme()}
                 >
                     <View style={styles.settings}>
                         <Text>Mode sombre</Text>
@@ -154,12 +163,12 @@ const CustomDrawerContent = (props) => {
       </DrawerContentScrollView>
 
       <Drawer.Section style={styles.logOutSection}>
-            <DrawerItem
-                label="Déconnexion"
-                icon={({color, size}) => <MaterialIcons name="logout" size={size} color={color} />}
-                onPress={() => alert('Deconnecté')}
+        <DrawerItem
+            label="Déconnexion"
+            icon={({color, size}) => <MaterialIcons name="logout" size={size} color={color} />}
+            onPress={handleLogout}
 
-            />
+        />
       </Drawer.Section>
     </View>
   )

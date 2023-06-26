@@ -1,22 +1,24 @@
-import { AUTH_USER } from "../constants";
+import { AUTH_USER, LOGOUT_USER } from "../constants";
 
 const initialState = {
   token: null, 
   userId: null,
-  error: null,
-  isLoading: false
+  // error: null,
+  // isLoading: false
 };
 
 const appReducer = (state = initialState, action) => {
   switch (action.type) {
     case AUTH_USER:
       return {
-        ...state,
         token: action.token,
         userId: action.userId,
-        error: null,
-        isLoading: false
       };
+
+    case LOGOUT_USER:
+      return initialState;
+      
+    
     default:
       return state;
   }

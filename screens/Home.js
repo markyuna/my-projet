@@ -6,7 +6,8 @@ import { useSelector } from 'react-redux';
 
 const Home = ({navigation}) => {
 
-  const authUser = useSelector(state => state.users);
+  const userInfos = useSelector(state => state.infos);
+  console.log(userInfos);
 
 
     const remove = async() => {

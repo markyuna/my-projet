@@ -1,16 +1,10 @@
-import { AUTH_USER } from "../constants";
+import { AUTH_USER, LOGOUT_USER } from "../constants";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const saveToAsyncStorage = async (token, userId, dataTokenExpire) => {
-  await AsyncStorage.setItem('userDetails', JSON.stringify({
-    token: token,
-    userId: userId,
-    dataTokenExpire: dataTokenExpire
-  }));
-};
 
 // Inscription
 export const actionSignup = (email, password) => {
+
   return async (dispatch) => {
     // http request
     const response = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=YOUR_API_KEY', {
@@ -60,7 +54,7 @@ export const actionSignup = (email, password) => {
 export const actionLogin = (email, password) => {
   return async (dispatch) => {
     // http request
-    const response = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=YOUR_API_KEY', {
+    const response = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAPFzAMUz4f-xrGvW_Vf8ofWC7lLLWE2Y4', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -98,7 +92,24 @@ export const actionLogin = (email, password) => {
     const dateTokenExpire = new Date(expireDate).toISOString();
 
     saveToAsyncStorage(dataObj.idToken, dataObj.localId, dateTokenExpire);
-  };
+  }
+};
+
+
+// Logout
+export const actionLogout = () => {
+  return {
+    type: LOGOUT_USER 
+  }
+};
+
+// Enregistrer la data dans AsyncStorage
+const saveToAsyncStorage = async (token, userId, dataTokenExpire) => {
+  await AsyncStorage.setItem('userDetails', JSON.stringify({
+    token: token,
+    userId: userId,
+    dataTokenExpire: dataTokenExpire
+  }));
 };
 
 // Auth action

@@ -66,7 +66,7 @@ const Login = ({ navigation }) => {
         setError(null);
         setIsLoading(true);
         try {
-          await dispatch(actionSignup(email, password));
+          dispatch(actionSignup(email, password));
           navigation.replace('ProfilInfos');
         } catch (error) {
           setError(error.message);
@@ -84,9 +84,10 @@ const Login = ({ navigation }) => {
           setIsLoading(false);
         }
       }
-    } else {
-      Alert("Vueillez remplir tous les champs");
-    }
+
+      } else {
+        alert("Vueillez remplir tous les champs");
+      }
   }
 
   if (isAuth) {

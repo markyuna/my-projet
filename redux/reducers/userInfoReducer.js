@@ -1,4 +1,4 @@
-import { USER_INFO } from '../constants';
+import { INFO_USER } from '../constants';
 
 const initialState = {
     userId: '',
@@ -8,7 +8,19 @@ const initialState = {
 }
 
 const userInfoReducer = (state = initialState, action) => {
-    return state;
+    switch (action.type) {
+        case INFO_USER:
+            return {
+                userId: action.infos.userId,
+                firstName: action.infos.firstName,
+                lastName: action.infos.lastName,
+                profilImage: action.infos.profilImage,
+            };
+
+        default:
+            return state;
+
+    }
 }
 
 export default userInfoReducer;
