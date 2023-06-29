@@ -10,23 +10,23 @@ const Portfolio = ({ navigation, route}) => {
     const fetchUserInfos = async () => {
         try {
             const userData = await fetchInSQLite();
-            //console.log(userData);
+            console.log(userData);
 
             /*
             WebSQLResultSet {
                 "insertId": undefined,
                 "rows": WebSQLRows {
                     "_array": Array [
-                    Object {
-                        "id": 1,
-                        "latitude": 37.785834,
-                        "longitude": -122.406417,
-                    },
-                    Object {
-                        "id": 2,
-                        "latitude": 37.785834,
-                        "longitude": -122.406417,
-                    },
+                        Object {
+                            "id": 1,
+                            "latitude": 37.785834,
+                            "longitude": -122.406417,
+                        },
+                        Object {
+                            "id": 2,
+                            "latitude": 37.785834,
+                            "longitude": -122.406417,
+                        },
                     ],
                     "length": 2,
                 },
@@ -35,10 +35,11 @@ const Portfolio = ({ navigation, route}) => {
             */
 
             // destructuring
-            const {latitude, longitude} = userData.rows._array[0];
-
-            setLatitude(latitude);
-            setLongitude(longitude);
+            if (userData.rows._array.length > 0) {
+                const { latitude, longitude } = userData.rows._array[0];
+                setLatitude(latitude);
+                setLongitude(longitude);
+              }
 
         } catch (error) {
             throw error;
@@ -67,10 +68,13 @@ const Portfolio = ({ navigation, route}) => {
                     style={styles.smallProfilImg}
                 />
                 <Text style={styles.profilName}>{firstName} {lastName}</Text>
-                <Text style={styles.profilName}>lat: {latitude} | Long {longitude}</Text>
+                <Text style={styles.profilName}>Lat: {latitude} | Long: {longitude}</Text>
             </View>
 
-            <Button title="Voir la carte" onPress={goToMap} />
+            <Button 
+                title="Voir la carte" 
+                onPress={goToMap}
+                style={styles.btnCarte} />
         </View>
     )
 }
@@ -98,7 +102,13 @@ const styles = StyleSheet.create({
     },
     profilName: {
         color: "white",
-        fontSize: 25
+        fontSize: 20
+    },
+    btnCarte: {
+        backgroundColor: "yellow",
+        fontSize: 20,
+        padding: 10,
+
     }
     
 })

@@ -35,7 +35,8 @@ const InteractiveMap = ({route}) => {
 const styles = StyleSheet.create({
     map: {
         flex: 1
-    }
+    }, 
+    
 })
 
 export default InteractiveMap

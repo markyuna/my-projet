@@ -10,8 +10,8 @@ const Tab = createBottomTabNavigator();
 const BottomTabNav = () => {
     return (
         <Tab.Navigator
-            screenOptions={({route}) => ({
-                tabBarIcon: ({focused, color, size}) => {
+            screenOptions={({ route, focused, color, size }) => ({
+                tabBarIcon: ({ color, size }) => {
                     let iconName;
                     if (route.name === 'Home') {
                         iconName = 'home';
@@ -29,14 +29,19 @@ const BottomTabNav = () => {
                 showLabel: false
             }}
         >
-            <Tab.Screen 
-               name="Home" 
-               component={HomeStackScreen} 
-               options={{
-                   title: 'Accueil',
-                   tabBarBadge: 8
-                }} />
-            <Tab.Screen name="Settings" component={Settings} options={{title: 'Réglages'}} />
+            <Tab.Screen
+                name="Home"
+                component={HomeStackScreen}
+                options={{
+                    title: 'Accueil',
+                    tabBarBadge: 8
+                }}
+            />
+            <Tab.Screen
+                name="Settings"
+                component={Settings}
+                options={{ title: 'Réglages' }}
+            />
         </Tab.Navigator>
     )
 }

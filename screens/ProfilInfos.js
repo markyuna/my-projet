@@ -34,12 +34,12 @@ const ProfilInfos = ({ navigation }) => {
     navigation.replace('GeoLocation');
   };
 
-  const pickImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
+  const pickImageAsync = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
-      aspect: [4, 3],
-      quality: 0.5,
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 1,
+      aspect: [1, 1],
+      canceled: false,
     });
 
     console.log(result);
@@ -78,7 +78,7 @@ const ProfilInfos = ({ navigation }) => {
             <Button
               title="Selectionner une photo"
               color="yellow"
-              onPress={pickImage}
+              onPress={pickImageAsync}
             />
           </View>
 

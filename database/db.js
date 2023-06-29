@@ -2,16 +2,35 @@ import * as SQLite from 'expo-sqlite';
 
 const db = SQLite.openDatabase('userGeo.db');
 
+// async function openDatabase(pathToDatabaseFile: string): Promise<SQLite.WebSQLDatabase> {
+//     if (!(await FileSystem.getInfoAsync(FileSystem.documentDirectory + 'SQLite')).exists) {
+//       await FileSystem.makeDirectoryAsync(FileSystem.documentDirectory + 'SQLite');
+//     }
+//     await FileSystem.downloadAsync(
+//       Asset.fromModule(require(pathToDatabaseFile)).uri,
+//       FileSystem.documentDirectory + 'SQLite/userGeo.db'
+//     );
+//     return SQLite.openDatabase('userGeo.db');
+//   }
+
 // Initialisation
 export const sqliteInit = () => {
     const initPromise = new Promise((resolve, reject) => {
-        // tx.executeSql(sqlStatement, arguments, success, error)
         db.transaction(tx => {
             tx.executeSql(
-                'CREATE TABLE IF NOT EXISTS userGeo (id INTEGER KEY NOT NULL, latitude REAL NOT NULL, longitude REAL NOT NULL);',
+                'DROP TABLE IF EXISTS userGeo;',
                 [],
                 () => {
-                    resolve();
+                    tx.executeSql(
+                        'CREATE TABLE userGeo (id INTEGER PRIMARY KEY NOT NULL, latitude REAL NOT NULL, longitude REAL NOT NULL);',
+                        [],
+                        () => {
+                            resolve();
+                        },
+                        (_, error) => {
+                            reject(error)
+                        }
+                    );
                 },
                 (_, error) => {
                     reject(error)
@@ -22,6 +41,8 @@ export const sqliteInit = () => {
 
     return initPromise;
 }
+
+
 
 // Enregistrer les datas de géolocalisation
 export const addUserGeo = (latitude, longitude) => {
@@ -43,6 +64,7 @@ export const addUserGeo = (latitude, longitude) => {
     return insertPromise;
 }
 
+
 // récupérer la data
 export const fetchInSQLite = () => {
     const fetchedPromise = new Promise((resolve, reject) => {
@@ -51,7 +73,11 @@ export const fetchInSQLite = () => {
                 'SELECT * FROM userGeo',
                 [],
                 (_, result) => {
-                    resolve(result);
+                    if (result.rows.length > 0) {
+                        resolve(result);
+                    } else {
+                        reject("No hay datos en la tabla userGeo.");
+                    }
                 },
                 (_, error) => {
                     reject(error)
@@ -62,3 +88,4 @@ export const fetchInSQLite = () => {
 
     return fetchedPromise;
 }
+
